@@ -64,7 +64,14 @@ const HomeScreen = () => {
       <Descuento />
       <IconsSection />
       <TripleSection />
-      <PlanCard />
+      <PlanCard addToCart={addToCart} />
+      {isCartVisible && (
+        <ShoppingCart
+          cart={cart}
+          removeFromCart={removeFromCart}
+          updateQuantity={updateQuantity}
+        />
+      )}
       <Footer />
     </div>
   )
