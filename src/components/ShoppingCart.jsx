@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './css/ShoppingCart.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBank, faCreditCard, faMoneyBill1, faMoneyBillTransfer, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBank, faCreditCard, faMoneyBillTransfer, faTrash } from '@fortawesome/free-solid-svg-icons';
 import useNotify from '../hooks/useToast';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
@@ -100,7 +100,7 @@ const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
     }));
 
     try {
-      const response = await fetch("https://two19labsdescuento-back.onrender.com", {
+      const response = await fetch("https://two19labsdescuento-back.onrender.com/Mercado_Pago", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
