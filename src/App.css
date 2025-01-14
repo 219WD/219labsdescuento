@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Unbounded:wght@200..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* .lenis.lenis-stopped {
+  overflow: hidden;
+} */
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-family: "Unbounded", sans-serif;
+  font-size: 5rem;
+  color: #f0f0f0;
+}
+
+h2 {
+  font-family: "Archivo Black", serif;
+  font-size: 5rem;
+  color: #f0f0f0;
+}
+
+h3 {
+  font-family: "Archivo Black", serif;
+  font-size: 3rem;
+  color: #f0f0f0;
+}
+
+h4 {
+  font-family: "Bebas Neue", serif;
+  font-size: 2rem;
+  color: #f0f0f0;
+}
+
+p {
+  font-family: "Montserrat", serif;
+  font-size: 1.2rem;
+  color: #f0f0f0;
+}
