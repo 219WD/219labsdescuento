@@ -2,11 +2,7 @@ import React from 'react';
 import './css/PlanCard.css';
 import usePricing from '../hooks/useGsapPricing';
 
-const PlanCard = ({ title, price, description, features, addToCart }) => {
-  const handleAddToCart = () => {
-    addToCart({ title, price, description, features });
-  };
-
+const PlanCard = ({ title, price, description, features }) => {
   usePricing();
   return (
     <div className="plan">
@@ -40,9 +36,9 @@ const PlanCard = ({ title, price, description, features, addToCart }) => {
           ))}
         </ul>
         <div className="action">
-          <button className="button" onClick={handleAddToCart}>
+          <a className="button" href="#">
             Contratar Plan
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -83,7 +79,6 @@ const PlanCardList = () => {
             price={plan.price}
             description={plan.description}
             features={plan.features}
-            addToCart={addToCart}
           />
         ))}
       </div>
