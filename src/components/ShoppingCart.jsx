@@ -13,7 +13,6 @@ const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
 
   // Campos del formulario
   const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
 
   // Calcular el total del carrito
