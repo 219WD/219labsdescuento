@@ -36,7 +36,7 @@ const Descuento = () => {
 
     try {
       // Llama a tu API con el método POST
-      const response = await fetch('https://tu-backend.com/api/registrar-email', {
+      const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/emails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
