@@ -1,9 +1,13 @@
 import React from 'react';
 import './css/PlanCard.css';
 import usePricing from '../hooks/useGsapPricing';
+import triple from '../assets/mockupTriple.png'
 
-const PlanCard = ({ title, price, description, features }) => {
+const PlanCard = ({ title, price, description, features, addToCart }) => {
   usePricing();
+  const handleAddToCart = () => {
+    addToCart(); 
+  };
   return (
     <div className="plan">
       <div className="inner">
@@ -36,24 +40,28 @@ const PlanCard = ({ title, price, description, features }) => {
           ))}
         </ul>
         <div className="action">
-          <a className="button" href="#">
+          <button className="button" onClick={handleAddToCart}>
             Contratar Plan
-          </a>
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-const PlanCardList = () => {
+const PlanCardList = ({ addToCart }) => {
   const plans = [
     {
+      id: 1,
+      image: triple,
       title: 'Basico',
       price: 300000,
       description: 'Perfecto para arrancar con tu negocio o proyecto personal.',
       features: ['30 productos', '3 formas de pago', 'Código QR', 'Botones a Whatsapp', 'Link a Redes Sociales', 'Mapa e información', 'Soporte 24/7', 'Sin comisiones', 'Dominio gratis'],
     },
     {
+      id: 2,
+      image: triple,
       title: 'Premium',
       price: 500000,
       description:
@@ -61,6 +69,8 @@ const PlanCardList = () => {
       features: ['200 productos', '3 formas de pago', 'Página de producto', 'Personalizacion total', 'Código QR', 'Botones a Whatsapp', 'Link a Redes Sociales', 'Mapa e información', 'Soporte 24/7', 'Sin comisiones', 'Dominio gratis',],
     },
     {
+      id: 3,
+      image: triple,
       title: 'Pro',
       price: 1000000,
       description: 'Perfecto para una marca ya consolidada que busca expandirse y llegar a más clientes sin depender de terceros.',
@@ -79,6 +89,7 @@ const PlanCardList = () => {
             price={plan.price}
             description={plan.description}
             features={plan.features}
+            addToCart={() => addToCart(plan)}
           />
         ))}
       </div>
