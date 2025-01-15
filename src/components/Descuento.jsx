@@ -28,44 +28,41 @@ const Descuento = () => {
     setEmail(e.target.value);
   };
 
-  const handleFormSubmit = async () => {
-    if (!email || !email.includes("@")) {
-      alert("Por favor ingresa un correo electrónico válido.");
-      return;
-    }
-
+  const getDiscount = async () => {
     try {
-      // Configuración de la solicitud
       const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append('Content-Type', 'application/json');
 
       const raw = JSON.stringify({ email });
 
       const requestOptions = {
-        method: "POST",
+        method: 'POST',
         headers: myHeaders,
         body: raw,
-        redirect: "follow",
       };
 
-      // URL de la API
-      const response = await fetch(
-        "https://two19labsdescuento-back.onrender.com/descuento/guardar-email",
-        requestOptions
-      );
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Respuesta del backend:", result);
-        alert("¡Gracias por registrarte! Te hemos enviado tu descuento.");
-        closeModal();
-      } else {
-        console.error("Error en la solicitud:", response.status);
-        alert("Hubo un problema al registrar tu email. Por favor, inténtalo de nuevo.");
-      }
+      const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/guardar-email', requestOptions);
+      const result = await response.json();
+      console.log(result);
+      return result;
     } catch (error) {
-      console.error("Error al conectar con el backend:", error);
-      alert("No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.");
+      console.error('Error al conectar con el backend:', error);
+      throw error;
+    }
+  };
+
+  const handleFormSubmit = async () => {
+    if (!email || !email.includes('@')) {
+      alert('Por favor ingresa un correo electrónico válido.');
+      return;
+    }
+
+    try {
+      const result = await getDiscount();
+      alert('¡Gracias por registrarte! Te hemos enviado tu descuento.');
+      closeModal();
+    } catch (error) {
+      alert('Hubo un problema al registrar tu email. Por favor, inténtalo de nuevo.');
     }
   };
 
