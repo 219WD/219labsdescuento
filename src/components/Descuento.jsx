@@ -29,33 +29,43 @@ const Descuento = () => {
   };
 
   const handleFormSubmit = async () => {
-    if (!email) {
-      alert('Por favor ingresa un correo electrónico válido.');
+    if (!email || !email.includes("@")) {
+      alert("Por favor ingresa un correo electrónico válido.");
       return;
     }
 
     try {
-      // Llama a tu API con el método POST
-      const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/guardar-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      // Configuración de la solicitud
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify({ email });
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      // URL de la API
+      const response = await fetch(
+        "https://two19labsdescuento-back.onrender.com/descuento/guardar-email",
+        requestOptions
+      );
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Respuesta del backend:', result);
-        alert('¡Gracias por registrarte! Te hemos enviado tu descuento.');
+        console.log("Respuesta del backend:", result);
+        alert("¡Gracias por registrarte! Te hemos enviado tu descuento.");
         closeModal();
       } else {
-        console.error('Error en la solicitud:', response.status);
-        alert('Hubo un problema al registrar tu email. Por favor, inténtalo de nuevo.');
+        console.error("Error en la solicitud:", response.status);
+        alert("Hubo un problema al registrar tu email. Por favor, inténtalo de nuevo.");
       }
     } catch (error) {
-      console.error('Error al conectar con el backend:', error);
-      alert('No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.');
+      console.error("Error al conectar con el backend:", error);
+      alert("No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.");
     }
   };
 
