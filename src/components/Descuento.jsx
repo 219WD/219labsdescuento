@@ -51,7 +51,9 @@ const Descuento = () => {
     }
   };
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();  // Prevenir la acción por defecto del formulario (recarga de página)
+
     if (!email || !email.includes('@')) {
       alert('Por favor ingresa un correo electrónico válido.');
       return;
@@ -69,6 +71,7 @@ const Descuento = () => {
   if (!isModalVisible) {
     return null;
   }
+  
   return (
     <div className="container">
       <div className="overlay">
@@ -86,14 +89,19 @@ const Descuento = () => {
           <p className="descripcion-oferta">DE DESCUENTO</p>
           <p className="nota">En tu proxima compra</p>
           <p className="descripcion-pequena">REGISTRATE <span>CON TU EMAIL</span> GRATIS!</p>
-          <input
-            className="input-email"
-            placeholder="INGRESA TU EMAIL"
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-          />
-          <button className="boton" onClick={handleFormSubmit}>APLICAR 20% DE DESCUENTO</button>
+
+          {/* Formulario envuelto aquí */}
+          <form onSubmit={handleFormSubmit}>
+            <input
+              className="input-email"
+              placeholder="INGRESA TU EMAIL"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            <button className="boton" type="submit">APLICAR 20% DE DESCUENTO</button>
+          </form>
+
           <a className="enlace-no-gracias" onClick={closeModal}>
             NO GRACIAS
           </a>
@@ -106,5 +114,4 @@ const Descuento = () => {
   );
 };
 
-
-export default Descuento
+export default Descuento;
