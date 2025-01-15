@@ -29,36 +29,35 @@ const Descuento = () => {
   };
 
   const handleFormSubmit = async () => {
-    if (!email || !email.includes("@")) {
+    if (!email) {
       alert('Por favor ingresa un correo electrónico válido.');
       return;
     }
-  
+
     try {
-      const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/guardar-email', {
+      // Llama a tu API con el método POST
+      const response = await fetch('https://tu-backend.com/api/registrar-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
       });
-  
-      if (response.status === 400) {
-        const error = await response.json();
-        alert(error.error || 'El email ya está registrado.');
-      } else if (!response.ok) {
-        throw new Error('Error desconocido al guardar el email');
-      } else {
-        const data = await response.json();
-        alert(data.message || '¡Gracias por registrarte! Te hemos enviado tu descuento.');
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Respuesta del backend:', result);
+        alert('¡Gracias por registrarte! Te hemos enviado tu descuento.');
         closeModal();
+      } else {
+        console.error('Error en la solicitud:', response.status);
+        alert('Hubo un problema al registrar tu email. Por favor, inténtalo de nuevo.');
       }
     } catch (error) {
-      console.error("Error al enviar el email:", error);
-      alert('Hubo un error al registrar tu correo electrónico. Intenta nuevamente.');
+      console.error('Error al conectar con el backend:', error);
+      alert('No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.');
     }
   };
-  
 
   if (!isModalVisible) {
     return null;
