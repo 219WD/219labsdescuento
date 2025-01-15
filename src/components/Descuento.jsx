@@ -33,7 +33,9 @@ const Descuento = () => {
       alert('Por favor ingresa un correo electrónico válido.');
       return;
     }
-
+  
+    console.log("Enviando correo:", email); // Añade un log aquí para verificar que el correo es correcto
+  
     // Hacer la solicitud POST al backend
     try {
       const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/guardar-email', {
@@ -43,11 +45,11 @@ const Descuento = () => {
         },
         body: JSON.stringify({ email }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Hubo un error al guardar el email');
       }
-
+  
       const data = await response.json();
       alert(data.message || '¡Gracias por registrarte! Te hemos enviado tu descuento.');
       closeModal();
@@ -55,7 +57,7 @@ const Descuento = () => {
       console.error("Error al enviar el email:", error);
       alert('Hubo un error al registrar tu correo electrónico. Intenta nuevamente.');
     }
-  };
+  };  
 
   if (!isModalVisible) {
     return null;
