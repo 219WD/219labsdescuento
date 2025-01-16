@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Footer.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhoneAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,57 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const getDiscount = async () => {
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+
+      const raw = JSON.stringify({ email });
+
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+      };
+
+      const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/guardar-email', requestOptions);
+
+      // Verifica si la respuesta es exitosa
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error('Error al conectar con el backend:', error);
+      alert(`Hubo un error: ${error.message}`);
+      throw error;
+    }
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();  // Prevenir la acción por defecto del formulario (recarga de página)
+
+    if (!email || !email.includes('@')) {
+      alert('Por favor ingresa un correo electrónico válido.');
+      return;
+    }
+
+    try {
+      const result = await getDiscount();
+      alert('¡Gracias por registrarte! Te hemos enviado tu descuento.');
+    } catch (error) {
+      alert('Hubo un problema al registrar tu email. Por favor, inténtalo de nuevo.');
+    }
+  };
   return (
     <footer className="footer">
       <div className="container-footer">
@@ -93,12 +144,16 @@ const Footer = () => {
           <div>
             <h3 className="footer-title">Suscríbete para Más Información</h3>
             <div className="footer-subscribe">
-              <input
-                type="email"
-                placeholder="Ingresa tu correo"
-                className="footer-input"
-              />
-              <button className="footer-button">Suscribirse</button>
+              <form onSubmit={handleFormSubmit}>
+                <input
+                  className="input-email"
+                  placeholder="INGRESA TU EMAIL"
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+                <button className="footer-button" type="submit">Suscribirse</button>
+              </form>
             </div>
           </div>
         </div>

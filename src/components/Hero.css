@@ -161,6 +161,9 @@
 
 /* Version Mobile - Unificada */
 @media (max-width: 900px) {
+    .content {
+        padding-bottom: 5rem;
+    }
     .background {
         flex-direction: column;
     }
