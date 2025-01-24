@@ -1,10 +1,52 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./dashboard.css";
 import NavDashboard from "./NavDashboard";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function Dashboard() {
+    const [carritos, setCarritos] = useState([]);
+    const [pedidosListos, setPedidosListos] = useState([]);
+
+    // URL base del backend
+    const API_URL = 'http://localhost:4000/carrito';
+
+    // Obtener los datos desde el backend
+    const verPedidos = useCallback(async () => {
+        try {
+            const response = await fetch(`${API_URL}/verCarritos`);
+            if (!response.ok) throw new Error('Error al obtener los datos');
+            const data = await response.json();
+            setCarritos(data);
+        } catch (error) {
+            console.error('Error al obtener carritos:', error);
+        }
+    }, []);
+
+    // Efecto para cargar los datos al montar el componente
+    useEffect(() => {
+        verPedidos();
+    }, [verPedidos]);
+
+      // Función para manejar el cambio de estado a "listo"
+      const moverAListo = (carrito) => {
+        setPedidosListos([...pedidosListos, carrito]);
+        setCarritos(carritos.filter(item => item._id !== carrito._id));
+    };
+
+    // Función para manejar el cambio de estado a "cerrado"
+    const despacharPedido = async (carritoId) => {
+        const updatedCarritos = carritos.map(carrito =>
+            carrito._id === carritoId ? { ...carrito, estado: 'Cerrado' } : carrito
+        );
+        setCarritos(updatedCarritos);
+        await fetch(`${API_URL}/actualizarEstado/${carritoId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ estado: 'Cerrado' }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+    };
+
     return (
         <div className="dashboard">
             <NavDashboard />
@@ -54,21 +96,27 @@ function Dashboard() {
                                 <th>Producto</th>
                                 <th>Descuento</th>
                                 <th>Forma de Pago</th>
-                                <th>Contactado</th>
+                                <th>Fecha</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Tienda Basica</td>
-                                <td>Descuento 20%</td>
-                                <td>Transferencia</td>
-                                <td>No</td>
-                                <td>
-                                    <span className="status shipped">Pendiente</span>
-                                </td>
-                            </tr>
-                            {/* Additional Rows */}
+                            {carritos.map((carrito) => (
+                                <tr key={carrito._id}>
+                                    <td>
+                                        {carrito.productos && carrito.productos.length > 0
+                                            ? carrito.productos.map((prod) => prod.productoId?.title || 'Sin título').join(', ')
+                                            : 'Sin productos'}
+                                    </td>
+                                    <td>Descuento 20%</td>
+                                    <td>{carrito.formaDePago}</td>
+                                    <td>{new Date(carrito.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <span className="status shipped">{carrito.estado}</span>
+                                    </td>
+                                </tr>
+                            ))}
+
                         </tbody>
                     </table>
                 </section>
@@ -78,41 +126,34 @@ function Dashboard() {
             <aside className="right-sidebar">
                 <h3>Lista de pedidos</h3>
                 <div className="items">
-                    <div className="item">
-                        <img src="https://placehold.co/30x30" alt="LCD TV Flat 30" />
-                        <div className="info">
-                            <p>Tienda Pro</p>
-                            <ul>
-                                <li>Paga con efectivo</li>
-                                <li>Descuento: 20%</li>
-                                <li>Contactado: Si</li>
-                            </ul>
-                            <button className="ready-btn">Listo</button>
+                    {carritos.map((carrito) => (
+                        <div key={carrito._id} className="item">
+                            <img src="https://placehold.co/30x30" alt="Producto" />
+                            <div className="info">
+                                <p>
+                                    {carrito.productos && carrito.productos.length > 0
+                                        ? carrito.productos.map((prod) => prod.productoId?.title || 'Sin título').join(', ')
+                                        : 'Sin productos'}</p>
+                                <ul>
+                                    <li>Forma de pago: {carrito.formaDePago}</li>
+                                    <li>Descuento: 20%</li>
+                                    <li>Estado: {carrito.estado}</li>
+                                </ul>
+                                <button className="ready-btn">Listo</button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="item">
-                        <img src="https://placehold.co/30x30" alt="Blith Speaker" />
-                        <div className="info">
-                            <p>Tienda Premium</p>
-                            <ul>
-                                <li>Paga con tarjeta</li>
-                                <li>Sin descuento</li>
-                                <li>Contactado: Si</li>
-                            </ul>
-                            <button className="ready-btn">Listo</button>
-                        </div>
-                    </div>
+                    ))}
                 </div>
                 <div className="details">
                     <h3>Pedido Listo</h3>
                     <div className="item">
-                        <img src="https://placehold.co/30x30" alt="LCD TV Flat 30" />
+                        <img src="https://placehold.co/30x30" alt="Producto" />
                         <div className="info">
                             <p>Tienda Pro</p>
                             <ul>
                                 <li>Paga con efectivo</li>
                                 <li>Descuento: 20%</li>
-                                <li>Contactado: Si</li>
+                                <li>Contactado: Sí</li>
                             </ul>
                             <button className="ready-btn">Despachar</button>
                         </div>
@@ -120,7 +161,6 @@ function Dashboard() {
                 </div>
                 <button>Ver todos los pedidos</button>
             </aside>
-
         </div>
     );
 }

@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet';
 import { initLenis } from './hooks/useLenis.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import Clientes from './components/Clientes.jsx';
+import Productos from './components/Productos.jsx';
+import Pedidos from './components/Pedidos.jsx';
 
 const HomeScreen = lazy(() => import('./pages/HomeScreen.jsx'));
 
@@ -48,6 +50,8 @@ function App() {
       <Route path="/" element={<HomeScreen />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/clientes" element={<Clientes />} />
+      <Route path="/productos" element={<Productos />} />
+      <Route path="/pedidos" element={<Pedidos />} />
       </Routes>
     </BrowserRouter>
   );

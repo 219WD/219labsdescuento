@@ -14,6 +14,8 @@ const HomeScreen = () => {
     return storedCart ? JSON.parse(storedCart) : [];
   });
   const [isCartVisible, setIsCartVisible] = useState(false);
+  const usuarioId = "679262aa93501e083bfb2f4a";
+  const jwt = "12443534232";
 
   const toggleCartVisibility = () => {
     setIsCartVisible(!isCartVisible);
@@ -59,6 +61,8 @@ const HomeScreen = () => {
           cart={cart}
           removeFromCart={removeFromCart}
           updateQuantity={updateQuantity}
+          usuarioId={usuarioId} 
+          jwt={jwt}
         />
       )}
       <Descuento />
