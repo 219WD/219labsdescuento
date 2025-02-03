@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './Cloudinary.css';
+import './css/Cloudinary.css';
 
 const Cloudinary = ({ onUploadComplete, reset }) => {
-    const preset_name = "219labs";
-    const cloud_name = "dtxdv136u";
+    const preset_name = import.meta.env.VITE_CLOUDINARY_PRESET;
+    const cloud_name = import.meta.env.VITE_CLOUDINARY_NAME;
+    
+
 
     const [image, setImage] = useState('');
     const [loading, setLoading] = useState(false);

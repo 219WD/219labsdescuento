@@ -28,11 +28,17 @@ const fetchRequest = async (url, jwt, options = {}) => {
         }
 
         const result = await response.json();
-        return result.data || result; 
+        return result.data || result;
     } catch (error) {
         console.error("Error en la solicitud:", error);
         throw error;
     }
+};
+
+
+// Obtener todos los carritos
+export const verCarritos = async (jwt) => {
+    return await fetchRequest(`${API_URL}${CARRITO}/verCarritos`, jwt);
 };
 
 // Agregar un producto al carrito
@@ -60,4 +66,11 @@ export const deleteProductoFromCarrito = async (jwt, usuarioId, productoId) => {
 // Limpiar el carrito de un usuario
 export const clearCarrito = async (jwt, usuarioId) => {
     return await fetchRequest(`${API_URL}${CARRITO}/limpiar/${usuarioId}`, jwt, { method: "DELETE" });
+};
+
+
+// Actualizar la cantidad de un producto en el carrito
+export const updateEstadoCarrito = async (jwt, carritoId, nuevoEstado) => {
+    const body = JSON.stringify({ estado: nuevoEstado });
+    return await fetchRequest(`${API_URL}${CARRITO}/estado/${carritoId}`, jwt, { method: "PUT", body });
 };

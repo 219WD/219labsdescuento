@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Footer.css';
+import './css/Footer.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhoneAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import {

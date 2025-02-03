@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit, faTrash, faSearch, faPowerOff } from "@fortawesome/free-solid-svg-icons";
-import "./productos.css";
+import "./css/productos.css";
 import NavDashboard from "./NavDashboard";
 import Cloudinary from "./Cloudinary";
+import useNotify from '../hooks/useToast';
 
 function Productos() {
     const [productos, setProductos] = useState([]);
@@ -17,6 +18,7 @@ function Productos() {
     const totalProductos = productos.length;
     const productosActivos = productos.filter((producto) => producto.estado === "activo").length;
     const productosInactivos = totalProductos - productosActivos;
+    const notify = useNotify();
 
     const [editing, setEditing] = useState(false);
     const [editingId, setEditingId] = useState(null);
@@ -57,9 +59,11 @@ function Productos() {
             setEditing(false);
             setImageReset(true); // Triggerear el reinicio del Cloudinary
             setTimeout(() => setImageReset(false), 100); // Reset tempora
+            notify(editing ? "Producto actualizado" : "Producto creado", 'success'); 
         } catch (error) {
             console.error(error);
             setErrorMessage("Error al guardar producto");
+            notify('Error al guardar el producto', 'error');
         }
     };
 
@@ -90,9 +94,11 @@ function Productos() {
 
             if (!response.ok) throw new Error("Error al cambiar estado del producto");
             await fetchProductos();
+            notify('Estado actualizado', 'success');
         } catch (error) {
             console.error(error);
             setErrorMessage("Error al cambiar estado");
+            notify('Error al actualizar el estado', 'error');
         }
     };
 

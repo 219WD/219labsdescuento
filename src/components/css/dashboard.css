@@ -7,6 +7,7 @@ body {
 .dashboard {
     display: flex;
     min-height: 100vh;
+    position: relative;
 }
 
 .sidebar {
@@ -254,3 +255,4 @@ body {
     font-size: 0.9rem;
     cursor: pointer;
 }
+

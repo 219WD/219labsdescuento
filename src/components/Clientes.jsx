@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import './Clientes.css';
+import './css/Clientes.css';
 import NavDashboard from './NavDashboard';
 
 const Clientes = () => {
@@ -70,7 +70,7 @@ const Clientes = () => {
 
     // Estadísticas
     const totalEmails = emails.length;
-    const notRegistered = emails.filter((email) => !email.registered).length;
+    const suscritos = emails.filter((email) => email.suscripcion).length;
 
     return (
         <div className="dashboard">
@@ -94,13 +94,13 @@ const Clientes = () => {
                         <p>Total de Clientes</p>
                     </div>
                     <div className="stat">
-                        <h3>{notRegistered}</h3>
-                        <p>No Registrados</p>
+                        <h3>{suscritos}</h3>
+                        <p>Clientes Suscritos</p>
                     </div>
                     <div className="help">
-                        <h3>GRAFICOS</h3>
-                        <p>Para una analítica más detallada, ver los gráficos de estadística.</p>
-                        <button>VER GRAFICOS</button>
+                        <h3>EMAIL MARKETING</h3>
+                        <p>Enviar un correo personalizado a todos los suscriptores.</p>
+                        <button>ENVIAR CORREO</button>
                     </div>
                 </section>
 
@@ -112,6 +112,7 @@ const Clientes = () => {
                             <tr>
                                 <th>Email</th>
                                 <th>Suscripción</th>
+                                <th>Descuento</th> {/* Nueva columna */}
                                 <th>Fecha de Registro</th>
                                 <th>Acciones</th>
                             </tr>
@@ -120,7 +121,8 @@ const Clientes = () => {
                             {emails.map((email) => (
                                 <tr key={email._id}>
                                     <td>{email.email}</td>
-                                    <td>{email.registered ? 'Sí' : 'No'}</td>
+                                    <td>{email.suscripcion ? 'Sí' : 'No'}</td>
+                                    <td>{email.descuento}</td> {/* Mostrar descuento */}
                                     <td>{new Date(email.createdAt).toLocaleDateString()}</td>
                                     <td>
                                         <button className="edit-btn" onClick={() => handleEdit(email._id)}>

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./dashboard.css";
+import "./css/dashboard.css";
 import NavDashboard from "./NavDashboard";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function Dashboard() {
     const [carritos, setCarritos] = useState([]);
-    const [pedidosListos, setPedidosListos] = useState([]);
+    const [visitas, setVisitas] = useState(0);
 
     // URL base del backend
     const API_URL = 'http://localhost:4000/carrito';
@@ -28,24 +28,51 @@ function Dashboard() {
         verPedidos();
     }, [verPedidos]);
 
-      // Función para manejar el cambio de estado a "listo"
-      const moverAListo = (carrito) => {
-        setPedidosListos([...pedidosListos, carrito]);
-        setCarritos(carritos.filter(item => item._id !== carrito._id));
+    // Cambiar estado del carrito en el backend
+    const cambiarEstado = async (carritoId, nuevoEstado) => {
+        try {
+            const response = await fetch(`${API_URL}/estado/${carritoId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ estado: nuevoEstado }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al cambiar el estado del carrito");
+            }
+
+            // Actualizar estado localmente en la UI
+            setCarritos((prevCarritos) =>
+                prevCarritos.map((carrito) =>
+                    carrito._id === carritoId
+                        ? { ...carrito, estado: nuevoEstado }
+                        : carrito
+                )
+            );
+        } catch (error) {
+            console.error("Error al cambiar el estado del carrito:", error);
+        }
     };
 
-    // Función para manejar el cambio de estado a "cerrado"
-    const despacharPedido = async (carritoId) => {
-        const updatedCarritos = carritos.map(carrito =>
-            carrito._id === carritoId ? { ...carrito, estado: 'Cerrado' } : carrito
-        );
-        setCarritos(updatedCarritos);
-        await fetch(`${API_URL}/actualizarEstado/${carritoId}`, {
-            method: 'PUT',
-            body: JSON.stringify({ estado: 'Cerrado' }),
-            headers: { 'Content-Type': 'application/json' },
-        });
-    };
+    // Manejar botón "Listo"
+    const marcarContactado = (carritoId) => cambiarEstado(carritoId, "contactado");
+
+    // Manejar botón "Despachar"
+    const despacharPedido = (carritoId) => cambiarEstado(carritoId, "cerrado");
+
+    useEffect(() => {
+        const fetchVisitas = async () => {
+            try {
+                const response = await fetch("http://localhost:4000/visitas"); // Ajusta según tu API
+                const data = await response.json();
+                setVisitas(data.totalVisits);
+            } catch (error) {
+                console.error("Error obteniendo visitas:", error);
+            }
+        };
+
+        fetchVisitas();
+    }, []);
 
     return (
         <div className="dashboard">
@@ -66,19 +93,16 @@ function Dashboard() {
                 {/* Stats */}
                 <section className="stats">
                     <div className="stat">
-                        <h3>1,356</h3>
-                        <p>Clientes en el Día</p>
-                        <p className="positive">+6.8%</p>
+                        <h3>{visitas}</h3>
+                        <p>Visitas al sitio</p>
                     </div>
                     <div className="stat">
-                        <h3>250</h3>
-                        <p>Carritos Cancelados</p>
-                        <p className="negative">+15%</p>
+                    <h3>{carritos.filter(carrito => carrito.estado === "pendiente").length}</h3>
+                    <p>Carritos Pendientes</p>
                     </div>
                     <div className="stat">
-                        <h3>800</h3>
-                        <p>Ventas</p>
-                        <p className="negative">+5.3%</p>
+                    <h3>{carritos.filter(carrito => carrito.estado === "cerrado").length}</h3>
+                    <p>Ventas</p>
                     </div>
                     <div className="help">
                         <h3>GRAFICOS</h3>
@@ -94,6 +118,7 @@ function Dashboard() {
                         <thead>
                             <tr>
                                 <th>Producto</th>
+                                <th>Precio</th>
                                 <th>Descuento</th>
                                 <th>Forma de Pago</th>
                                 <th>Fecha</th>
@@ -105,7 +130,14 @@ function Dashboard() {
                                 <tr key={carrito._id}>
                                     <td>
                                         {carrito.productos && carrito.productos.length > 0
-                                            ? carrito.productos.map((prod) => prod.productoId?.title || 'Sin título').join(', ')
+                                            ? carrito.productos.map((prod) => prod.productoId?.title).join(' ')
+                                            : 'Sin productos'}
+                                    </td>
+                                    <td>
+                                        {carrito.productos && carrito.productos.length > 0
+                                            ? carrito.productos
+                                                .map((prod) => prod.productoId?.price) // Valida si price existe o coloca '0'
+                                                .join(' ')
                                             : 'Sin productos'}
                                     </td>
                                     <td>Descuento 20%</td>
@@ -126,38 +158,69 @@ function Dashboard() {
             <aside className="right-sidebar">
                 <h3>Lista de pedidos</h3>
                 <div className="items">
-                    {carritos.map((carrito) => (
-                        <div key={carrito._id} className="item">
-                            <img src="https://placehold.co/30x30" alt="Producto" />
-                            <div className="info">
-                                <p>
-                                    {carrito.productos && carrito.productos.length > 0
-                                        ? carrito.productos.map((prod) => prod.productoId?.title || 'Sin título').join(', ')
-                                        : 'Sin productos'}</p>
-                                <ul>
-                                    <li>Forma de pago: {carrito.formaDePago}</li>
-                                    <li>Descuento: 20%</li>
-                                    <li>Estado: {carrito.estado}</li>
-                                </ul>
-                                <button className="ready-btn">Listo</button>
+                    <h3>Pendientes</h3>
+                    {carritos
+                        .filter((carrito) => carrito.estado === "pendiente")
+                        .map((carrito) => (
+                            <div key={carrito._id} className="item">
+                                <img
+                                    src={
+                                        carrito.productos && carrito.productos.length > 0
+                                            ? carrito.productos.map((prod) => prod.productoId?.image).join(' ')
+                                            : 'Sin productos'}
+                                    alt="Producto"
+                                />
+                                <div className="info">
+                                    <p>
+                                        {carrito.productos && carrito.productos.length > 0
+                                            ? carrito.productos.map((prod) => prod.productoId?.title).join(' ')
+                                            : 'Sin Producto'}</p>
+                                    <ul>
+                                        <li>Forma de pago: {carrito.formaDePago}</li>
+                                        <li>Descuento: 20%</li>
+                                        <li>Estado: {carrito.estado}</li>
+                                    </ul>
+                                    <button
+                                        className="ready-btn"
+                                        onClick={() => marcarContactado(carrito._id)}
+                                    >
+                                        Listo
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
                 </div>
                 <div className="details">
-                    <h3>Pedido Listo</h3>
-                    <div className="item">
-                        <img src="https://placehold.co/30x30" alt="Producto" />
-                        <div className="info">
-                            <p>Tienda Pro</p>
-                            <ul>
-                                <li>Paga con efectivo</li>
-                                <li>Descuento: 20%</li>
-                                <li>Contactado: Sí</li>
-                            </ul>
-                            <button className="ready-btn">Despachar</button>
-                        </div>
-                    </div>
+                    <h3>Contactados</h3>
+                    {carritos
+                        .filter((carrito) => carrito.estado === "contactado")
+                        .map((carrito) => (
+                            <div key={carrito._id} className="item">
+                                <img
+                                    src={
+                                        carrito.productos && carrito.productos.length > 0
+                                            ? carrito.productos.map((prod) => prod.productoId?.image).join(' ')
+                                            : 'Sin productos'}
+                                    alt="Producto"
+                                />
+                                <div className="info">
+                                    <p>
+                                        {carrito.productos?.map((prod) => prod.productoId?.title).join(", ") || "Sin productos"}
+                                    </p>
+                                    <ul>
+                                        <li>Forma de pago: {carrito.formaDePago}</li>
+                                        <li>Descuento: 20%</li>
+                                        <li>Estado: {carrito.estado}</li>
+                                    </ul>
+                                    <button
+                                        className="ready-btn"
+                                        onClick={() => despacharPedido(carrito._id)}
+                                    >
+                                        Despachar
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                 </div>
                 <button>Ver todos los pedidos</button>
             </aside>

@@ -13,8 +13,8 @@ const usePricing = () => {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".container.planes",
-                start: "top 60%",
-                end: "+=80%",
+                start: "top 80%",
+                end: "+=10%",
                 scrub: 0.5,
             },
         }).set(

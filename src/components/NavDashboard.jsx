@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faHome,
@@ -8,13 +8,22 @@ import {
     faUser,
     faChartLine,
     faBoxesPacking,
-    faPencil
+    faPencil,
+    faTachometerAlt
 } from "@fortawesome/free-solid-svg-icons";
-import "./dashboard.css";
+import "./css/dashboard.css";
 import logo from "../assets/logo.svg";
 import { Link } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const NavDashboard = () => {
+  const { clearToken } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    clearToken();
+    window.location.href = '/'; // Redirigir al home después de cerrar sesión
+  };
+
     return (
         <div className='dashboard'>
             {/* Sidebar */}
@@ -23,8 +32,12 @@ const NavDashboard = () => {
                     <img src={logo} alt="User profile" />
                 </div>
                 <nav className="menu">
-                    <Link to={'/dashboard'} className="menu-item">
+                    <Link to={'/'} className="menu-item">
                         <FontAwesomeIcon icon={faHome} />
+                        <span>Homescreen</span>
+                    </Link>
+                    <Link to={'/dashboard'} className="menu-item">
+                        <FontAwesomeIcon icon={faTachometerAlt} />
                         <span>Dashboard</span>
                     </Link>
                     <Link to={'/pedidos'} className="menu-item">
@@ -39,7 +52,7 @@ const NavDashboard = () => {
                         <FontAwesomeIcon icon={faBoxesPacking} />
                         <span>Productos</span>
                     </Link>
-                    <Link to={'/editar-pagina'} className="menu-item">
+                    <Link to={'/editarLanding'} className="menu-item">
                         <FontAwesomeIcon icon={faPencil} />
                         <span>Editar Página</span>
                     </Link>
@@ -51,7 +64,7 @@ const NavDashboard = () => {
                         <FontAwesomeIcon icon={faCog} />
                         <span>Configuración</span>
                     </Link>
-                    <Link to={'/cerrar-sesion'} className="menu-item">
+                    <Link to={'/cerrar-sesion'} className="menu-item" onClick={handleLogout}>
                         <FontAwesomeIcon icon={faSignOutAlt} />
                         <span>Cerrar Sesión</span>
                     </Link>

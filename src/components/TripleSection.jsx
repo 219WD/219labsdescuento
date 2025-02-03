@@ -1,5 +1,5 @@
 import React from 'react'
-import './TripleSection.css'
+import './css/TripleSection.css'
 import photo1 from '../assets/mockupTriple.png'
 import photo2 from '../assets/mockupMac.png'
 import photo3 from '../assets/mockupCelulares.png'

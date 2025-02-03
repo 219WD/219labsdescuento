@@ -143,3 +143,65 @@
     font-size: 0.75rem;
     color: #808080;
 }
+
+h5 {
+    font-family: "Archivo Black", serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* Estilo general del select */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    appearance: none; /* Oculta la flecha por defecto */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin: 0.5rem 0;
+}
+
+/* Agregar un icono de flecha */
+select::after {
+    content: '\25BC';
+    font-size: 16px;
+    color: #007bff;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Cambiar el borde al enfocar */
+select:focus {
+    border-color: #0056b3;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Opciones del select */
+option {
+    font-size: 16px;
+    padding: 10px;
+    background: white;
+    color: black;
+}
+
+/* Estilo cuando el select está abierto */
+select:hover {
+    background-color: #f8f9fa;
+}
+
+/* Hacerlo más atractivo en dispositivos móviles */
+@media (max-width: 768px) {
+    select {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

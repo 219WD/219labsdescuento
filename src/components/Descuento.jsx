@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import './Descuento.css'
+import './css/Descuento.css'
 import gsap from 'gsap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
@@ -30,33 +30,29 @@ const Descuento = () => {
 
   const getDiscount = async () => {
     try {
-      const myHeaders = new Headers();
-      myHeaders.append('Content-Type', 'application/json');
-  
-      const raw = JSON.stringify({ email });
-  
-      const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-      };
-  
-      const response = await fetch('https://two19labsdescuento-back.onrender.com/descuento/guardar-email', requestOptions);
-  
-      // Verifica si la respuesta es exitosa
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await fetch(
+        'https://two19labsdescuento-back.onrender.com/descuento/guardar-email', 
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        }
+      );
   
       const result = await response.json();
-      console.log(result);
+      
+      if (!response.ok) {
+        throw new Error(result.error || "Error al guardar el email");
+      }
+  
+      console.log("Respuesta del servidor:", result);
       return result;
     } catch (error) {
-      console.error('Error al conectar con el backend:', error);
+      console.error("Error al conectar con el backend:", error);
       alert(`Hubo un error: ${error.message}`);
       throw error;
     }
-  };
+  };  
   
 
   const handleFormSubmit = async (e) => {
