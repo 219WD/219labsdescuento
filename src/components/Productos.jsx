@@ -5,6 +5,7 @@ import "./css/productos.css";
 import NavDashboard from "./NavDashboard";
 import Cloudinary from "./Cloudinary";
 import useNotify from '../hooks/useToast';
+import DateTime from "../hooks/DateTime";
 
 function Productos() {
     const [productos, setProductos] = useState([]);
@@ -127,7 +128,8 @@ function Productos() {
                             <FontAwesomeIcon icon={faSearch} />
                         </button>
                     </div>
-                    <div className="header-time">18:10 PM Miercoles, 15 Ene 2025</div>
+                    
+                    <DateTime />
                 </header>
                 <h3 className="productos-title">Gestión de Productos</h3>
 

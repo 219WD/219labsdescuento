@@ -3,9 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import './css/Clientes.css';
 import NavDashboard from './NavDashboard';
+import EmailMarketing from './EmailMarketing';
+import DateTime from '../hooks/DateTime';
 
 const Clientes = () => {
     const [emails, setEmails] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     // URL base del backend
     const API_URL = 'http://localhost:4000/descuento';
@@ -84,7 +87,8 @@ const Clientes = () => {
                             <FontAwesomeIcon icon={faSearch} />
                         </button>
                     </div>
-                    <div className="header-time">18:10 PM Miercoles, 15 Ene 2025</div>
+
+                    <DateTime />
                 </header>
 
                 {/* Stats */}
@@ -100,7 +104,17 @@ const Clientes = () => {
                     <div className="help">
                         <h3>EMAIL MARKETING</h3>
                         <p>Enviar un correo personalizado a todos los suscriptores.</p>
-                        <button>ENVIAR CORREO</button>
+                        <button className="open-modal" onClick={() => setShowModal(true)}>ENVIAR CORREO</button>
+                        {showModal && (
+                            <div className="modal-overlay">
+                                <div className="modal-content">
+                                    <EmailMarketing
+                                        onClose={() => setShowModal(false)}
+                                        subscribedEmails={emails.filter(email => email.suscripcion).map(email => email.email)}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </section>
 

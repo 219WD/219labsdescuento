@@ -3,11 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./css/dashboard.css";
 import NavDashboard from "./NavDashboard";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import DateTime from "../hooks/DateTime";
+import { useTheme } from "../context/ThemeContext";
 
 function Dashboard() {
     const [carritos, setCarritos] = useState([]);
     const [visitas, setVisitas] = useState(0);
 
+    const { isDarkMode } = useTheme();
     // URL base del backend
     const API_URL = 'http://localhost:4000/carrito';
 
@@ -75,7 +78,7 @@ function Dashboard() {
     }, []);
 
     return (
-        <div className="dashboard">
+        <div className={`dashboard ${isDarkMode ? "dark-mode" : ""}`}>
             <NavDashboard />
             {/* Main Content */}
             <div className="main-content">
@@ -87,7 +90,7 @@ function Dashboard() {
                             <FontAwesomeIcon icon={faSearch} />
                         </button>
                     </div>
-                    <div className="header-time">18:10 PM Miercoles, 15 Ene 2025</div>
+                    <DateTime />
                 </header>
 
                 {/* Stats */}

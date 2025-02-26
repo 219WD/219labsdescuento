@@ -11,6 +11,7 @@ import NavDashboard from './NavDashboard';
 import AuthContext from '../context/AuthContext';
 import EstadoCarritoModal from './CarritoModal';
 import useNotify from '../hooks/useToast';
+import DataTime from '../hooks/DateTime';
 
 
 const Pedidos = () => {
@@ -77,7 +78,8 @@ const Pedidos = () => {
                             <FontAwesomeIcon icon={faSearch} />
                         </button>
                     </div>
-                    <div className="header-time">18:10 PM Lunes, 27 Ene 2025</div>
+
+                    <DataTime />
                 </header>
 
                 <section className="orders-table">

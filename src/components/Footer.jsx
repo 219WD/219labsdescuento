@@ -147,7 +147,7 @@ const Footer = () => {
               <form onSubmit={handleFormSubmit}>
                 <input
                   className="input-email"
-                  placeholder="INGRESA TU EMAIL"
+                  placeholder="Ingresa tu email"
                   type="email"
                   value={email}
                   onChange={handleEmailChange}

@@ -10,18 +10,33 @@ body {
     position: relative;
 }
 
+/* Estilos del modo oscuro */
+.dashboard.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--main-color, #d32f2f);
+    /* Usamos la variable de color */
+    color: white;
+    padding: 20px;
+}
+
+/* Agregar un color personalizado */
+:root {
+    --main-color: #d32f2f;
+    /* Rojo por defecto */
+}
+
+
 .sidebar {
     width: 250px;
     background-color: #d32f2f;
     color: white;
     padding: 20px;
 }
-
-/* .sidebar .profile-picture img {
-    width: 50px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-} */
 
 .sidebar .profile-picture img {
     width: 50px;
@@ -33,17 +48,22 @@ body {
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
-    text-decoration: none; /* Quita el subrayado */
-    color: #f3f3f3; /* Aplica el color del texto */
+    text-decoration: none;
+    /* Quita el subrayado */
+    color: #f3f3f3;
+    /* Aplica el color del texto */
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, padding 0.3s ease;
 }
 
 .sidebar .menu .menu-item:hover {
-    background-color: #a62828; /* Color de fondo al pasar el mouse */
+    background-color: #a62828;
+    /* Color de fondo al pasar el mouse */
     border-radius: 5px;
-    color: #ffffff; /* Cambiar el color al pasar el mouse */
-    padding: 10px; /* Opcional: Agregar relleno en hover */
+    color: #ffffff;
+    /* Cambiar el color al pasar el mouse */
+    padding: 10px;
+    /* Opcional: Agregar relleno en hover */
 }
 
 
@@ -255,4 +275,3 @@ body {
     font-size: 0.9rem;
     cursor: pointer;
 }
-
