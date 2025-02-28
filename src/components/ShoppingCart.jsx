@@ -5,8 +5,7 @@ import { faBank, faCreditCard, faMoneyBillTransfer, faTrash } from '@fortawesome
 import useNotify from '../hooks/useToast';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
-
-const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
+const ShoppingCart = ({ cart, removeFromCart, updateQuantity }) => {
   const notify = useNotify();
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [modalInfo, setModalInfo] = useState(null);
@@ -17,11 +16,6 @@ const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
 
   // Calcular el total del carrito
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-  // Guardar carrito en localStorage cuando se actualiza
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
 
   // Generar mensaje para WhatsApp
   const generateWhatsAppMessage = () => {
@@ -59,8 +53,6 @@ const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
     const message = generateWhatsAppMessage();
     const whatsappURL = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${message}`;
     window.location.href = whatsappURL;
-    setCart([]);
-    localStorage.removeItem('cart');
     notify('Pedido enviado correctamente a WhatsApp.', 'success');
   };
 
@@ -131,7 +123,7 @@ const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
         <p>El carrito está vacío.</p>
       ) : (
         cart.map((item) => (
-          <div key={item.id} className="cart-item">
+          <div key={item._id} className="cart-item">
             <img src={item.image} alt={item.title} />
             <div>
               <h4>{item.title}</h4>
@@ -139,13 +131,13 @@ const ShoppingCart = ({ cart, setCart, removeFromCart, updateQuantity }) => {
               <p>${parseFloat(item.price).toFixed(2)}</p>
             </div>
             <div className="buttons-cart">
-              <button onClick={() => updateQuantity(item.id, -1)}>-</button>
+              <button onClick={() => updateQuantity(item._id, -1)}>-</button>
               <span>{item.quantity}</span>
-              <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+              <button onClick={() => updateQuantity(item._id, 1)}>+</button>
             </div>
             <button
               className="delete-button"
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => removeFromCart(item._id)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>

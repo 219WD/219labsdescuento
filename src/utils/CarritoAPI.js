@@ -1,4 +1,4 @@
-import { API_URL } from '../../Initials/ApiUrl';
+import { API_URL } from '/Initials/ApiUrl';
 
 const CARRITO = '/carrito'; // Base URL para las rutas del carrito
 
@@ -56,7 +56,7 @@ export const getCarritoByUsuario = async (jwt, usuarioId) => {
 export const updateProductoInCarrito = async (jwt, usuarioId, productoId, cantidad) => {
     const body = JSON.stringify({ cantidad });
     return await fetchRequest(`${API_URL}${CARRITO}/actualizar/${usuarioId}/${productoId}`, jwt, { method: "PUT", body });
-};
+  };
 
 // Eliminar un producto del carrito
 export const deleteProductoFromCarrito = async (jwt, usuarioId, productoId) => {

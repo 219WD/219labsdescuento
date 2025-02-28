@@ -1,20 +1,23 @@
 import React from 'react';
 import './css/PlanCard.css';
 import usePricing from '../hooks/useGsapPricing';
-import triple from '../assets/mockupTriple.png'
 
-const PlanCard = ({ title, price, description, features, addToCart }) => {
+const PlanCard = ({ title, price, description, features, addToCart, plan }) => {
   usePricing();
-  const handleAddToCart = () => {
-    addToCart(); 
-  };
+
+const handleAddToCart = () => {
+  console.log("Producto agregado al carrito:", plan); // Verifica el producto
+  addToCart({
+    ...plan,
+    id: plan._id, // Asegúrate de que el producto tenga un `id`
+  });
+};
+
   return (
     <div className="plan">
       <div className="inner">
         <span className="pricing">
-          <span>
-            ${price}
-          </span>
+          <span>${price}</span>
         </span>
         <p className="title">{title}</p>
         <p className="descrip">{description}</p>
@@ -49,52 +52,4 @@ const PlanCard = ({ title, price, description, features, addToCart }) => {
   );
 };
 
-const PlanCardList = ({ addToCart }) => {
-  const plans = [
-    {
-      id: 1,
-      image: triple,
-      title: 'Basico',
-      price: 300000,
-      description: 'Perfecto para arrancar con tu negocio o proyecto personal.',
-      features: ['30 productos', '3 formas de pago', 'Código QR', 'Botones a Whatsapp', 'Link a Redes Sociales', 'Mapa e información', 'Soporte 24/7', 'Sin comisiones', 'Dominio gratis'],
-    },
-    {
-      id: 2,
-      image: triple,
-      title: 'Premium',
-      price: 500000,
-      description:
-        'Perfecto para empresas que buscan crecer y expandirse con una presencia online impactante.',
-      features: ['200 productos', '3 formas de pago', 'Página de producto', 'Personalizacion total', 'Código QR', 'Botones a Whatsapp', 'Link a Redes Sociales', 'Mapa e información', 'Soporte 24/7', 'Sin comisiones', 'Dominio gratis',],
-    },
-    {
-      id: 3,
-      image: triple,
-      title: 'Pro',
-      price: 1000000,
-      description: 'Perfecto para una marca ya consolidada que busca expandirse y llegar a más clientes sin depender de terceros.',
-      features: ['Productos ilimitados', 'Autoadministrable', '3 formas de pago', 'Página de producto', 'Página acerca de nosotros', 'Panel de administrador', 'Analíticas', 'Registo/Inicio de sesión', 'Personalizacion total', 'Código QR', 'Botones a Whatsapp', 'Link a Redes Sociales', 'Mapa e información', 'Soporte 24/7', 'Sin comisiones', 'Dominio gratis',],
-    },
-  ];
-
-  return (
-    <div className="container planes">
-      <h2 className='title-pricing'>Nuestros Planes</h2>
-      <div className="plans-container">
-        {plans.map((plan, index) => (
-          <PlanCard
-            key={index}
-            title={plan.title}
-            price={plan.price}
-            description={plan.description}
-            features={plan.features}
-            addToCart={() => addToCart(plan)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default PlanCardList;
+export default PlanCard;

@@ -1,80 +1,55 @@
-import React, { useState } from 'react'
-import Hero from '../components/Hero'
-import Descuento from '../components/Descuento'
-import TripleSection from '../components/TripleSection'
-import IconsSection from '../components/IconSection'
-import NavBar from '../components/NavBar'
-import ShoppingCart from '../components/ShoppingCart'
-import PlanCard from '../components/PlanCard'
-import Footer from '../components/Footer'
+import React, { useContext } from 'react';
+import Hero from '../components/Hero';
+import Descuento from '../components/Descuento';
+import TripleSection from '../components/TripleSection';
+import IconsSection from '../components/IconSection';
+import NavBar from '../components/NavBar';
+import ShoppingCart from '../components/ShoppingCart';
+import PlanCardList from '../components/PlanCardList'; // Importa PlanCardList
+import Footer from '../components/Footer';
+import { useCarrito } from '../context/ContextCart'; // Importa el hook useCarrito
 
 const HomeScreen = () => {
-  const [cart, setCart] = useState(() => {
-    const storedCart = localStorage.getItem('cart');
-    return storedCart ? JSON.parse(storedCart) : [];
-  });
-  const [isCartVisible, setIsCartVisible] = useState(false);
+  const {
+    carrito,
+    isCartVisible,
+    agregarProducto,
+    eliminarProducto,
+    actualizarCantidad,
+    toggleCartVisibility,
+  } = useCarrito(); // Usa el hook useCarrito
 
-  const toggleCartVisibility = () => {
-    setIsCartVisible(!isCartVisible);
-  };
+  // Verifica que carrito sea un array antes de usar reduce
+  const cartCount = Array.isArray(carrito) ? carrito.reduce((acc, item) => acc + (item.quantity || 0), 0) : 0;
 
-  const addToCart = (item) => {
-    const existingItem = cart.find((cartItem) => cartItem.id === item.id);
-    if (existingItem) {
-      setCart(
-        cart.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        )
-      );
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
-    }
-  };
-
-  const removeFromCart = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
-  };
-
-  const updateQuantity = (id, increment) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(item.quantity + increment, 1) }
-          : item
-      )
-    );
-  };
   return (
     <div className='container'>
       <NavBar
-        cartCount={cart.reduce((acc, item) => acc + item.quantity, 0)}
+        cartCount={cartCount}
         toggleCartVisibility={toggleCartVisibility}
       />
-      <Hero addToCart={addToCart} />
+      <Hero addToCart={agregarProducto} />
       {isCartVisible && (
         <ShoppingCart
-          cart={cart}
-          removeFromCart={removeFromCart}
-          updateQuantity={updateQuantity}
+          cart={carrito}
+          removeFromCart={eliminarProducto}
+          updateQuantity={actualizarCantidad}
         />
       )}
       <Descuento />
       <IconsSection />
       <TripleSection />
-      <PlanCard addToCart={addToCart} />
+      <PlanCardList addToCart={agregarProducto} /> {/* Usa PlanCardList aquí */}
       {isCartVisible && (
         <ShoppingCart
-          cart={cart}
-          removeFromCart={removeFromCart}
-          updateQuantity={updateQuantity}
+          cart={carrito}
+          removeFromCart={eliminarProducto}
+          updateQuantity={actualizarCantidad}
         />
       )}
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
