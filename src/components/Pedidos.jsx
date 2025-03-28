@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTrash, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import {
     verCarritos,
-    deleteProductoFromCarrito,
+    clearCarrito,
     updateEstadoCarrito
 } from '../utils/CarritoAPI';
 import './css/Pedidos.css';
@@ -12,6 +12,7 @@ import AuthContext from '../context/AuthContext';
 import EstadoCarritoModal from './CarritoModal';
 import useNotify from '../hooks/useToast';
 import DataTime from '../hooks/DateTime';
+import { API_URL } from '../../Initials/ApiUrl';
 
 
 const Pedidos = () => {
@@ -32,18 +33,34 @@ const Pedidos = () => {
         }
     }, [token]);
 
-    const handleDeleteProducto = async (productoId) => {
-        if (!token) return;
-        if (window.confirm('¿Seguro que deseas eliminar este producto del carrito?')) {
-            try {
-                await deleteProductoFromCarrito(token, productoId);
-                await fetchCarritos();
-                alert('Producto eliminado con éxito');
-            } catch (error) {
-                console.error('Error al eliminar el producto:', error);
-            }
+    const handleClearCarrito = async (carritoId) => {
+        if (!window.confirm("¿Estás seguro de que deseas vaciar este carrito?")) return;
+    
+        try {
+            if (!token) throw new Error("No se encontró el token de autenticación");
+            
+            // Primero obtenemos el carrito para saber el usuarioId
+            const carrito = carritos.find(c => c._id === carritoId);
+            if (!carrito) throw new Error("Carrito no encontrado");
+            
+            const usuarioId = carrito.usuarioId?._id;
+            if (!usuarioId) throw new Error("No se pudo identificar al usuario del carrito");
+    
+            // Llamamos a la API para limpiar el carrito
+            const response = await clearCarrito(token, usuarioId);
+            
+            if (!response) throw new Error("No se recibió respuesta del servidor");
+            
+            // Actualizamos la lista de carritos
+            await fetchCarritos();
+            notify('Carrito vaciado correctamente', 'success');
+        } catch (error) {
+            console.error(error);
+            notify(error.message || 'Error al vaciar el carrito', 'error');
         }
     };
+    
+    
 
     const handleOpenEstadoModal = (carritoId) => {
         setCarritoIdEstado(carritoId);
@@ -113,7 +130,7 @@ const Pedidos = () => {
                                     <td>${carrito.total}</td>
                                     <td className="buttons">
                                         <button
-                                            onClick={() => handleDeleteProducto(carrito._id)}
+                                            onClick={() => handleClearCarrito(carrito._id)}
                                             className="btn btn-delete"
                                         >
                                             <FontAwesomeIcon icon={faTrash} />

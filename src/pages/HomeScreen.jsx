@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Hero from '../components/Hero';
 import Descuento from '../components/Descuento';
 import TripleSection from '../components/TripleSection';
 import IconsSection from '../components/IconSection';
 import NavBar from '../components/NavBar';
 import ShoppingCart from '../components/ShoppingCart';
-import PlanCardList from '../components/PlanCardList'; // Importa PlanCardList
+import PlanCardList from '../components/PlanCardList';
 import Footer from '../components/Footer';
-import { useCarrito } from '../context/ContextCart'; // Importa el hook useCarrito
+import { useCarrito } from '../context/ContextCart';
 
 const HomeScreen = () => {
   const {
@@ -17,9 +17,9 @@ const HomeScreen = () => {
     eliminarProducto,
     actualizarCantidad,
     toggleCartVisibility,
-  } = useCarrito(); // Usa el hook useCarrito
+    loading
+  } = useCarrito();
 
-  // Verifica que carrito sea un array antes de usar reduce
   const cartCount = Array.isArray(carrito) ? carrito.reduce((acc, item) => acc + (item.quantity || 0), 0) : 0;
 
   return (
@@ -29,25 +29,23 @@ const HomeScreen = () => {
         toggleCartVisibility={toggleCartVisibility}
       />
       <Hero addToCart={agregarProducto} />
-      {isCartVisible && (
-        <ShoppingCart
-          cart={carrito}
-          removeFromCart={eliminarProducto}
-          updateQuantity={actualizarCantidad}
-        />
-      )}
       <Descuento />
       <IconsSection />
       <TripleSection />
-      <PlanCardList addToCart={agregarProducto} /> {/* Usa PlanCardList aquí */}
-      {isCartVisible && (
-        <ShoppingCart
-          cart={carrito}
-          removeFromCart={eliminarProducto}
-          updateQuantity={actualizarCantidad}
-        />
-      )}
+      <PlanCardList addToCart={agregarProducto} />
       <Footer />
+      
+      {/* Mover el ShoppingCart fuera del flujo normal para que no afecte el layout */}
+      {isCartVisible && (
+        <div className="cart-overlay">
+          <ShoppingCart
+            cart={carrito}
+            removeFromCart={eliminarProducto}
+            updateQuantity={actualizarCantidad}
+            loading={loading}
+          />
+        </div>
+      )}
     </div>
   );
 };
