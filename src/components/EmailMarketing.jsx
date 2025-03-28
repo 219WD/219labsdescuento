@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
 import "./css/EmailMarketing.css";
+import useNotify from '../hooks/useToast';
 
 const EmailMarketing = ({ onClose, subscribedEmails }) => {
     const [recipients, setRecipients] = useState(subscribedEmails.join(", "));
     const [subject, setSubject] = useState("Oferta Especial para Ti!");
     const [offerLink, setOfferLink] = useState("");
+    const notify = useNotify();
 
     const handleSendEmail = async () => {
         const recipientList = recipients.split(",").map(email => email.trim());
 
         if (!recipientList.length || !subject || !offerLink) {
-            alert("Por favor, completa todos los campos.");
+            notify('Por favor, completa todos los campos.', 'error');
             return;
         }
 
         // Validar si el enlace tiene formato de URL
         const urlPattern = /^(https?:\/\/)?([\w\d-]+\.)+[\w\d]{2,}(\/.*)?$/;
         if (!urlPattern.test(offerLink)) {
-            alert("Ingresa un enlace válido.");
+            notify('Ingresa un enlace válido.', 'error');
             return;
         }
 
@@ -39,15 +41,15 @@ const EmailMarketing = ({ onClose, subscribedEmails }) => {
 
             const result = await response.json();
             if (response.ok) {
-                alert("Emails enviados con éxito!");
+                notify('Emails enviados con éxito!', 'success');
                 setRecipients("");
                 setOfferLink("");
             } else {
-                alert(`Error: ${result.message || "No se pudieron enviar los correos."}`);
+                notify(`Error: ${result.message || "No se pudieron enviar los correos."}`);
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("Hubo un problema enviando los correos.");
+            notify('Hubo un problema enviando los correos.', 'error');
         }
     };
 
